@@ -1,27 +1,47 @@
 # Keep Awake Lite
 
-Small Windows tray utility that keeps a workstation awake by moving the mouse cursor 1 pixel at a configurable interval.
+> A deliberately under-engineered tray utility that prevents your Windows workstation from taking a nap by nudging the mouse 1 pixel every now and then.
 
-This is the lite version: no dashboard, no statistics, no idle history, and no continuous timer display.
+No live dashboard. No charts. No idle analytics. No cockpit pretending your cursor is mission-critical infrastructure.
 
-## Features
+Just a tiny tray app that moves the cursor and stays out of the way.
 
-- Runs as a Windows tray application.
+## What Is This?
+
+**Keep Awake Lite** is a lightweight Windows tray application that:
+
 - Starts automatically with Windows.
-- Moves the cursor 1 pixel right and back at the configured interval.
-- Lets you set the interval from the tray menu in minutes and seconds.
-- Supports Pause/Resume from the tray menu.
-- Prevents multiple running instances with a Windows mutex.
-- Uses `pythonw.exe` in script mode to avoid a visible CMD window.
+- Moves the mouse cursor 1 pixel right and back at a configurable interval.
+- Lets you configure that interval in minutes and seconds from the tray menu.
+- Can be paused and resumed without quitting the app.
+- Avoids duplicate tray instances with a Windows mutex.
+- Uses `pythonw.exe` in script mode so startup does not leave a console window behind.
+
+It exists because sometimes changing power settings is blocked, ignored, reset, managed, haunted by policy, or simply not worth arguing with.
 
 ## Tray Menu
 
-- `Set interval...`: opens a small Windows dialog for minutes and seconds.
-- `Pause` / `Resume`: temporarily stops or resumes cursor movement.
-- `Run at startup`: toggles the Windows startup registry entry.
-- `Quit`: exits the tray app.
+Right-click the tray icon:
 
-The interval is saved under the current user's registry settings and is reused on the next start. Pause is runtime-only and is not persisted.
+- `Set interval...`: choose minutes and seconds.
+- `Pause` / `Resume`: temporarily stop or restart cursor movement.
+- `Run at startup`: toggle the Windows startup entry.
+- `Quit`: leave the workstation to its own sleepy decisions.
+
+The interval is saved for the current Windows user and reused on the next start. Pause is intentionally temporary and resets when the app starts again.
+
+## How It Works
+
+Every configured interval, the app performs a tiny mouse move:
+
+```text
+1 pixel right
+1 pixel left
+```
+
+That is the whole trick.
+
+The lite version does not monitor idle time and does not try to be smart. This is by design. Fewer moving parts, fewer surprises, fewer tiny web dashboards for a tool whose job is basically "poke Windows occasionally."
 
 ## Build
 
@@ -30,6 +50,8 @@ Recommended build:
 ```bash
 pyinstaller --noconsole --onedir --name KeepAwakeLite --icon icons/app.ico app.py
 ```
+
+The `--noconsole` flag matters. Without it, Windows may reward you with a console window you did not ask for.
 
 ## Development
 
@@ -81,7 +103,7 @@ Minimum interval:
 MIN_INTERVAL_SECONDS = 1
 ```
 
-The default can be changed in code, but normal use should go through the tray menu.
+You can change the default in code, but normal use should go through the tray menu. That is why the tray menu exists. It wanted a job.
 
 ## Startup Behavior
 
@@ -95,4 +117,4 @@ When running from source, the startup command uses `pythonw.exe` when available.
 
 ## License
 
-MIT
+MIT. Use it, change it, ship it, or quietly let it keep your workstation awake while you get coffee.
